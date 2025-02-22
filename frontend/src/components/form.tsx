@@ -119,7 +119,7 @@ export function LocationForm() {
         };
         console.log(data);
         toast.success("Form submitted!", {
-            description: "Check the console for form data.",
+            description: "Redirecting to results page.",
         });
         navigate("/results", { state: data });
     }
