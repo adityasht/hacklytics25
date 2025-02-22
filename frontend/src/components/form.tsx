@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { toast } from "sonner";
-
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
     Form,
@@ -24,46 +24,124 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 
+import { Textarea } from "@/components/ui/textarea";
+
+import { useNavigate } from "react-router-dom";
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ACCEPTED_IMAGE_TYPES = [
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "image/webp",
+];
+
 const formSchema = z.object({
-    zipCode: z.string().min(5, {
-        message: "Zip code must be at least 5 characters.",
-    }),
-    city: z.string().min(2, {
-        message: "City must be at least 2 characters.",
-    }),
-    state: z.string().min(2, {
-        message: "State must be at least 2 characters.",
-    }),
-    neighborhood: z.string().min(2, {
-        message: "Neighborhood must be at least 2 characters.",
-    }),
-    image: z.instanceof(File).optional(),
+    address: z.string().min(1, { message: "Address is required." }),
+    damageContext: z
+        .string()
+        .max(500, {
+            message: "Damage context must be less than 500 characters.",
+        })
+        .optional(),
+
+    retrofitContext: z
+        .string()
+        .max(500, {
+            message: "Retrofit context must be less than 500 characters.",
+        })
+        .optional(),
 });
 
+type FormValues = z.infer<typeof formSchema>;
 export function LocationForm() {
-    const form = useForm<z.infer<typeof formSchema>>({
+    const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+    const [selectedRetrofit, setSelectedRetrofit] = useState<File[]>([]);
+    const navigate = useNavigate();
+    const form = useForm<FormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            zipCode: "",
-            city: "",
-            state: "",
-            neighborhood: "",
+            address: "",
+            damageContext: "",
+            retrofitContext: "",
         },
     });
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values);
+        if (selectedFiles.length == 0) {
+            toast.error("Please select an image.", {
+                style: { backgroundColor: "red", color: "white" },
+            });
+            return;
+        }
+        if (selectedFiles.some((file) => file.size > MAX_FILE_SIZE)) {
+            toast.error("File size is too large. Max size is 5MB.", {
+                style: { backgroundColor: "red", color: "white" },
+            });
+            return;
+        }
+        if (
+            selectedFiles.some(
+                (file) => !ACCEPTED_IMAGE_TYPES.includes(file.type)
+            )
+        ) {
+            toast.error(
+                "Invalid file type. Only JPEG, PNG, and WEBP allowed.",
+                {
+                    style: { backgroundColor: "red", color: "white" },
+                }
+            );
+            return;
+        }
+        if (selectedRetrofit.some((file) => file.size > MAX_FILE_SIZE)) {
+            toast.error("File size is too large. Max size is 5MB.", {
+                style: { backgroundColor: "red", color: "white" },
+            });
+            return;
+        }
+        if (
+            selectedRetrofit.some(
+                (file) => !ACCEPTED_IMAGE_TYPES.includes(file.type)
+            )
+        ) {
+            toast.error(
+                "Invalid file type. Only JPEG, PNG, and WEBP allowed.",
+                {
+                    style: { backgroundColor: "red", color: "white" },
+                }
+            );
+            return;
+        }
+        const data = {
+            ...values,
+            images: selectedFiles,
+            retrofit: selectedRetrofit,
+        };
+        console.log(data);
         toast.success("Form submitted!", {
             description: "Check the console for form data.",
         });
+        navigate("/results", { state: data });
     }
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files;
+        if (files) {
+            setSelectedFiles(Array.from(files));
+        }
+    };
+    const handleRetrofitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files;
+        if (files) {
+            setSelectedRetrofit(Array.from(files));
+        }
+    };
     return (
-        <Card className="w-[350px]">
+        <Card className="w-[550px]">
             <CardHeader>
-                <CardTitle>Location Information</CardTitle>
+                <CardTitle>Property Information</CardTitle>
                 <CardDescription>
-                    Enter your location details below.
+                    Enter details about your property below
                 </CardDescription>
             </CardHeader>
             <CardContent>
@@ -73,91 +151,105 @@ export function LocationForm() {
                         className="space-y-8">
                         <FormField
                             control={form.control}
-                            name="zipCode"
+                            name="address"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Zip Code</FormLabel>
+                                    <FormLabel>Address</FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder="Enter zip code"
+                                            placeholder="Enter your property address"
                                             {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="city"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>City</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            placeholder="Enter city"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="state"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>State</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            placeholder="Enter state"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="neighborhood"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Neighborhood</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            placeholder="Enter neighborhood"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="image"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Image Upload</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type="file"
-                                            accept="image/*"
-                                            onChange={(e) => {
-                                                const file =
-                                                    e.target.files?.[0];
-                                                if (file) {
-                                                    field.onChange(file);
-                                                }
-                                            }}
                                         />
                                     </FormControl>
                                     <FormDescription>
-                                        {field.value
-                                            ? `Selected file: ${field.value.name}`
-                                            : "Choose an image to upload"}
+                                        Enter the address of your property
+                                    </FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormItem>
+                            <FormLabel>Upload Images of any damages</FormLabel>
+                            <FormControl>
+                                <Input
+                                    type="file"
+                                    multiple
+                                    accept="image/*"
+                                    onChange={handleFileChange}
+                                />
+                            </FormControl>
+                            <FormDescription>
+                                {selectedFiles.length > 0
+                                    ? "Selected files: " +
+                                      selectedFiles
+                                          .map((file) => file.name)
+                                          .join(", ")
+                                    : "Choose images to upload"}
+                            </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+
+                        <FormField
+                            control={form.control}
+                            name="damageContext"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Damages Context</FormLabel>
+                                    <FormControl>
+                                        <Textarea
+                                            placeholder="Provide some context about the damages (optional)"
+                                            className="resize-none"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormDescription>
+                                        Describe the damages or provide any
+                                        additional information (max 500
+                                        characters)
+                                    </FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormItem>
+                            <FormLabel>
+                                Upload Images of any retrofits/upgrades{" "}
+                            </FormLabel>
+                            <FormControl>
+                                <Input
+                                    type="file"
+                                    multiple
+                                    accept="image/*"
+                                    onChange={handleRetrofitChange}
+                                />
+                            </FormControl>
+                            <FormDescription>
+                                {selectedRetrofit.length > 0
+                                    ? "Selected files: " +
+                                      selectedRetrofit
+                                          .map((file) => file.name)
+                                          .join(", ")
+                                    : "Choose images to upload"}
+                            </FormDescription>
+                        </FormItem>
+                        <FormField
+                            control={form.control}
+                            name="retrofitContext"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Retrofits Context</FormLabel>
+                                    <FormControl>
+                                        <Textarea
+                                            placeholder="Provide some context about the retrofits (optional)"
+                                            className="resize-none"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormDescription>
+                                        Describe the retrofits or provide any
+                                        additional information (max 500
+                                        characters)
                                     </FormDescription>
                                     <FormMessage />
                                 </FormItem>
