@@ -1,10 +1,10 @@
 import "./App.css";
-
+import { LocationForm } from "./components/form";
 function App() {
     return (
         <>
             <div>
-                <p>loading -my branch</p>
+                <LocationForm></LocationForm>
             </div>
         </>
     );
