@@ -18,13 +18,25 @@ export function Result() {
         }
 
         const fetchText = async () => {
-            await new Promise((resolve) => setTimeout(resolve, 5000));
-            //make post req to api
-
-            const loremIpsum =
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.";
-
-            // setText(loremIpsum);
+            const formData = new FormData();
+            formData.append("address", data.address);
+            formData.append("damageContext", data.damage);
+            data.images.forEach((image: File, index: number) => {
+                formData.append(`image${index}`, image);
+            });
+            data.retrofit.forEach((file: File, index: number) => {
+                formData.append(`retrofit${index}`, file);
+            });
+            try {
+                const response = await fetch("http://localhost:5000/", {
+                    method: "POST",
+                    body: formData,
+                });
+                const result = await response.json();
+                console.log(result);
+            } catch (err) {
+                console.error(err);
+            }
         };
 
         fetchText();
