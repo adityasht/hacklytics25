@@ -23,15 +23,10 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
 
 import { Textarea } from "@/components/ui/textarea";
+
+import { useNavigate } from "react-router-dom";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = [
@@ -42,26 +37,7 @@ const ACCEPTED_IMAGE_TYPES = [
 ];
 
 const formSchema = z.object({
-    zipCode: z.string().length(5, {
-        message: "Zip code must be 5 characters.",
-    }),
-    neighborhood: z.string().min(2, {
-        message: "Neighborhood must be at least 2 characters.",
-    }),
-    propertyType: z.enum(
-        [
-            "Condo",
-            "Land",
-            "Manufactured",
-            "Multi-Family",
-            "Single Family",
-            "Townhouse",
-        ],
-        {
-            required_error: "Please select a property type.",
-        }
-    ),
-    bedrooms: z.number().min(1).max(5),
+    address: z.string().min(1, { message: "Address is required." }),
     damageContext: z
         .string()
         .max(500, {
@@ -81,49 +57,71 @@ type FormValues = z.infer<typeof formSchema>;
 export function LocationForm() {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [selectedRetrofit, setSelectedRetrofit] = useState<File[]>([]);
+    const navigate = useNavigate();
     const form = useForm<FormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            zipCode: "",
-            neighborhood: "",
-            propertyType: undefined,
-            bedrooms: 1,
+            address: "",
+            damageContext: "",
+            retrofitContext: "",
         },
     });
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values);
         if (selectedFiles.length == 0) {
-            toast.error("Please select an image.");
+            toast.error("Please select an image.", {
+                style: { backgroundColor: "red", color: "white" },
+            });
+            return;
         }
         if (selectedFiles.some((file) => file.size > MAX_FILE_SIZE)) {
-            toast.error("File size is too large. Max size is 5MB.");
+            toast.error("File size is too large. Max size is 5MB.", {
+                style: { backgroundColor: "red", color: "white" },
+            });
+            return;
         }
         if (
             selectedFiles.some(
                 (file) => !ACCEPTED_IMAGE_TYPES.includes(file.type)
             )
         ) {
-            toast.error("Invalid file type. Only JPEG, PNG, and WEBP allowed.");
+            toast.error(
+                "Invalid file type. Only JPEG, PNG, and WEBP allowed.",
+                {
+                    style: { backgroundColor: "red", color: "white" },
+                }
+            );
+            return;
         }
         if (selectedRetrofit.some((file) => file.size > MAX_FILE_SIZE)) {
-            toast.error("File size is too large. Max size is 5MB.");
+            toast.error("File size is too large. Max size is 5MB.", {
+                style: { backgroundColor: "red", color: "white" },
+            });
+            return;
         }
         if (
             selectedRetrofit.some(
                 (file) => !ACCEPTED_IMAGE_TYPES.includes(file.type)
             )
         ) {
-            toast.error("Invalid file type. Only JPEG, PNG, and WEBP allowed.");
+            toast.error(
+                "Invalid file type. Only JPEG, PNG, and WEBP allowed.",
+                {
+                    style: { backgroundColor: "red", color: "white" },
+                }
+            );
+            return;
         }
-        console.log({
+        const data = {
             ...values,
             images: selectedFiles,
             retrofit: selectedRetrofit,
-        });
+        };
+        console.log(data);
         toast.success("Form submitted!", {
             description: "Check the console for form data.",
         });
+        navigate("/results", { state: data });
     }
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -153,146 +151,24 @@ export function LocationForm() {
                         className="space-y-8">
                         <FormField
                             control={form.control}
-                            name="zipCode"
+                            name="address"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Zip Code</FormLabel>
+                                    <FormLabel>Address</FormLabel>
                                     <FormControl>
                                         <Input
-                                            type="text"
-                                            maxLength={5}
-                                            placeholder="Enter zip code"
+                                            placeholder="Enter your property address"
                                             {...field}
                                         />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        <FormField
-                            control={form.control}
-                            name="neighborhood"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Neighborhood</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            placeholder="Enter neighborhood"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="propertyType"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Property Type</FormLabel>
-                                    <Select
-                                        onValueChange={field.onChange}
-                                        defaultValue={field.value}>
-                                        <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select a property type" />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            <SelectItem value="Condo">
-                                                Condo
-                                            </SelectItem>
-                                            <SelectItem value="Land">
-                                                Land
-                                            </SelectItem>
-                                            <SelectItem value="Manufactured">
-                                                Manufactured
-                                            </SelectItem>
-                                            <SelectItem value="Multi-Family">
-                                                Multi-Family
-                                            </SelectItem>
-                                            <SelectItem value="Single Family">
-                                                Single Family
-                                            </SelectItem>
-                                            <SelectItem value="Townhouse">
-                                                Townhouse
-                                            </SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="bedrooms"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Bedrooms</FormLabel>
-                                    <FormControl>
-                                        <div className="flex items-center space-x-2">
-                                            <Button
-                                                type="button"
-                                                variant="outline"
-                                                size="icon"
-                                                onClick={() => {
-                                                    if (!field.value) {
-                                                        field.onChange(1);
-                                                    } else if (
-                                                        field.value > 1
-                                                    ) {
-                                                        field.onChange(
-                                                            field.value - 1
-                                                        );
-                                                    }
-                                                }}>
-                                                -
-                                            </Button>
-                                            <Input
-                                                type="number"
-                                                {...field}
-                                                onChange={(e) => {
-                                                    const value =
-                                                        Number.parseInt(
-                                                            e.target.value
-                                                        );
-                                                    field.onChange(
-                                                        Math.min(
-                                                            Math.max(1, value),
-                                                            5
-                                                        )
-                                                    );
-                                                }}
-                                                className="w-16 text-center"
-                                            />
-                                            <Button
-                                                type="button"
-                                                variant="outline"
-                                                size="icon"
-                                                onClick={() => {
-                                                    if (!field.value) {
-                                                        field.onChange(1);
-                                                    } else if (
-                                                        field.value < 5
-                                                    ) {
-                                                        field.onChange(
-                                                            field.value + 1
-                                                        );
-                                                    }
-                                                }}>
-                                                +
-                                            </Button>
-                                        </div>
                                     </FormControl>
                                     <FormDescription>
-                                        Number of bedrooms (1-5)
+                                        Enter the address of your property
                                     </FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
+
                         <FormItem>
                             <FormLabel>Upload Images of any damages</FormLabel>
                             <FormControl>
@@ -311,7 +187,9 @@ export function LocationForm() {
                                           .join(", ")
                                     : "Choose images to upload"}
                             </FormDescription>
+                            <FormMessage />
                         </FormItem>
+
                         <FormField
                             control={form.control}
                             name="damageContext"
@@ -360,7 +238,7 @@ export function LocationForm() {
                             name="retrofitContext"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Retorfits Context</FormLabel>
+                                    <FormLabel>Retrofits Context</FormLabel>
                                     <FormControl>
                                         <Textarea
                                             placeholder="Provide some context about the retrofits (optional)"
