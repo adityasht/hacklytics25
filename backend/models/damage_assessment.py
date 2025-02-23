@@ -33,7 +33,6 @@ class AutomaticDamageAssessment(LLMSession):
 
     def _parse_cost_estimate(self, estimate_text: str) -> Dict:
         """Parse the cost estimate text into structured data."""
-        print(estimate_text, '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
         try:
             # Extract total cost range
             lines = estimate_text.split('\n')
@@ -103,7 +102,7 @@ class AutomaticDamageAssessment(LLMSession):
             'error': None,
             'property_info': self.property_info
         }
-        #print(self.property_info, "FUK me in da asas")
+  
 
         try:
             # Get initial vision analysis
@@ -222,7 +221,7 @@ class AutomaticDamageAssessment(LLMSession):
         elif command == 'end':
             self._handle_end_command(content, initial_analysis, assessment_data)
         else:
-            print(command, content, '<<<<<<<<<<<<<<<<<<<<<<<')
+         
             raise ValueError("Invalid response format from text model")
         
     async def _handle_prompt_command(

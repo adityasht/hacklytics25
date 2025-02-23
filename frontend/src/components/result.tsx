@@ -10,10 +10,8 @@ export function Result() {
     const navigate = useNavigate();
     const data = location.state;
     useEffect(() => {
-        if (data) {
-            console.log(data);
-        } else {
-            console.log("No data found");
+        console.log("in effect");
+        if (!data) {
             navigate("/");
         }
 
@@ -28,6 +26,7 @@ export function Result() {
                 formData.append(`retrofit${index}`, file);
             });
             try {
+                console.log("fetching");
                 const response = await fetch("http://localhost:5000/", {
                     method: "POST",
                     body: formData,

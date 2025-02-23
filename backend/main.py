@@ -5,6 +5,16 @@ import logging
 from pathlib import Path
 from typing import Dict, Optional, List
 from models.damage_assessment import AutomaticDamageAssessment
+import os
+import requests
+import pandas as pd
+import io
+from dotenv import load_dotenv
+
+load_dotenv()
+
+RENTCAST_API_KEY = os.getenv("RENTCAST_API_KEY")
+RENTCAST_URL = 'https://api.rentcast.io/v1/properties'
 
 # Configure logging
 logging.basicConfig(
@@ -113,35 +123,44 @@ Property Info: {self.assessor.property_info}"""
         with open(output_path, 'w') as f:
             json.dump(result, f, indent=2)
         logger.info(f"Assessment saved to {output_path}")
+def retrievePropertyData(address):
+    querystring = {"address" : address}
 
-def main():
-    """Main entry point for the damage assessment tool."""
-    import argparse
-    
-    parser = argparse.ArgumentParser(description='Property Damage Assessment Tool')
-    parser.add_argument('--image', type=str, help='Path to single image')
-    parser.add_argument('--batch', type=str, nargs='+', help='Paths to multiple images for batch assessment')
-    parser.add_argument('--propertyinfo', type=str, help='Property information string')
-    
-    args = parser.parse_args()
-    
+    headers = {
+        "accept": "application/json",
+        "X-Api-Key": RENTCAST_API_KEY
+    }
+
+    response = requests.get(RENTCAST_URL, headers=headers, params=querystring)
+
+    if response.status_code == 200:
+        df = pd.DataFrame(response.json()).drop(columns= ['id','addressLine1','addressLine2','assessorID','legalDescription','owner'])
+        buffer = io.StringIO()
+        df.to_string(buffer)
+        return buffer.getvalue()
+
+    else:
+        return {"error": f"Failed to fetch data. Status Code: {response.status_code}"}
+
+def main(images_of_damages, propertyinfo):
     async def run_assessment():
-        if args.propertyinfo:
-            manager = DamageAssessmentManager(args.propertyinfo)
+        if propertyinfo:
+            manager = DamageAssessmentManager(propertyinfo)
         else:
             manager = DamageAssessmentManager()
-        
-        if args.image:
-            result = await manager.process_single_image(args.image)
+
+        if images_of_damages:
+            result = await manager.process_single_image(str(images_of_damages))
+
             if result:
-                print(json.dumps(result, indent=2))
-                
-        elif args.batch:
-            results = await manager.process_batch(args.batch)
+                return json.dumps(result, indent=2)
+
+        elif images_of_damages.batch:
+            results = await manager.process_batch(images_of_damages.batch)
             for path, result in results.items():
-                print(f"\nResults for {path}:")
-                print(json.dumps(result, indent=2))
-        
+            
+                return json.dumps(result, indent=2)
+
         else:
             print("Please provide an image path using --image or --batch")
 

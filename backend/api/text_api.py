@@ -27,7 +27,8 @@ LOG_LEVEL = 'INFO'
 
 async def text_api_call(prompt: str) -> dict:
     """Make a text API call to the Deepseek model."""
-    try:
+    try:  
+        print(OPENROUTER_API_KEY)   
         response = requests.post(
             url=API_URL,
             headers=API_HEADERS,
