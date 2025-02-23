@@ -44,13 +44,6 @@ const formSchema = z.object({
             message: "Damage context must be less than 500 characters.",
         })
         .optional(),
-
-    retrofitContext: z
-        .string()
-        .max(500, {
-            message: "Retrofit context must be less than 500 characters.",
-        })
-        .optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -63,7 +56,6 @@ export function LocationForm() {
         defaultValues: {
             address: "",
             damageContext: "",
-            retrofitContext: "",
         },
     });
 
@@ -93,25 +85,6 @@ export function LocationForm() {
             );
             return;
         }
-        if (selectedRetrofit.some((file) => file.size > MAX_FILE_SIZE)) {
-            toast.error("File size is too large. Max size is 5MB.", {
-                style: { backgroundColor: "red", color: "white" },
-            });
-            return;
-        }
-        if (
-            selectedRetrofit.some(
-                (file) => !ACCEPTED_IMAGE_TYPES.includes(file.type)
-            )
-        ) {
-            toast.error(
-                "Invalid file type. Only JPEG, PNG, and WEBP allowed.",
-                {
-                    style: { backgroundColor: "red", color: "white" },
-                }
-            );
-            return;
-        }
         const data = {
             ...values,
             images: selectedFiles,
@@ -130,12 +103,7 @@ export function LocationForm() {
             setSelectedFiles(Array.from(files));
         }
     };
-    const handleRetrofitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const files = e.target.files;
-        if (files) {
-            setSelectedRetrofit(Array.from(files));
-        }
-    };
+
     return (
         <Card className="w-[550px]">
             <CardHeader>
@@ -205,49 +173,6 @@ export function LocationForm() {
                                     </FormControl>
                                     <FormDescription>
                                         Describe the damages or provide any
-                                        additional information (max 500
-                                        characters)
-                                    </FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormItem>
-                            <FormLabel>
-                                Upload Images of any retrofits/upgrades{" "}
-                            </FormLabel>
-                            <FormControl>
-                                <Input
-                                    type="file"
-                                    multiple
-                                    accept="image/*"
-                                    onChange={handleRetrofitChange}
-                                />
-                            </FormControl>
-                            <FormDescription>
-                                {selectedRetrofit.length > 0
-                                    ? "Selected files: " +
-                                      selectedRetrofit
-                                          .map((file) => file.name)
-                                          .join(", ")
-                                    : "Choose images to upload"}
-                            </FormDescription>
-                        </FormItem>
-                        <FormField
-                            control={form.control}
-                            name="retrofitContext"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Retrofits Context</FormLabel>
-                                    <FormControl>
-                                        <Textarea
-                                            placeholder="Provide some context about the retrofits (optional)"
-                                            className="resize-none"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormDescription>
-                                        Describe the retrofits or provide any
                                         additional information (max 500
                                         characters)
                                     </FormDescription>
