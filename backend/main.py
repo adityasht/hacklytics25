@@ -38,7 +38,15 @@ class DamageAssessmentManager:
             result = await self.assessor.run_assessment(
                 image_path=image_path,
                 initial_vision_prompt=(
-                    f"""1. PRIMARY DAMAGE ASSESSMENT
+                    f"""
+You are doing a property assesment to decide if there is SIGNIFICANT damage to property visible in the picture.      
+
+If you observe NO SIGNIFICANT DAMAGE:
+- Explicitly state that no significant damage is visible
+- Note any preventive maintenance recommendations
+- Identify any early warning signs to monitor
+
+1. PRIMARY DAMAGE ASSESSMENT
 - What specific type of damage is visible?
 - What is the apparent cause of the damage (age, weather, wear, etc.)?
 - Precisely describe the visual characteristics of the damage
@@ -84,12 +92,6 @@ class DamageAssessmentManager:
 - Identify any maintenance issues contributing to damage
 - Record any relevant historical repair evidence
 - Note any immediate temporary remediation needs
-
-If you observe NO SIGNIFICANT DAMAGE:
-- Explicitly state that no significant damage is visible
-- Document the current condition thoroughly
-- Note any preventive maintenance recommendations
-- Identify any early warning signs to monitor
 
 SUMMARY REQUIREMENTS:
 - Provide clear severity classification

@@ -159,7 +159,8 @@ class AutomaticDamageAssessment(LLMSession):
         
         Based on this information, you should either:
         1. Respond with 'Prompt:' followed by a specific question to get more details from the vision model
-        2. Respond with 'End:' followed by a complete cost assessment in this exact format and keep the ranges as small as possible:
+        2. If you do not see any significant damage beyond wear and tear, or do not see damage at all. Respond with 'End: Notes: [Reasoning as to why you belive no repairs are needed]'
+        3. Respond with 'End:' followed by a complete cost assessment in this exact format and keep the ranges as small as possible:
 
         'Total Estimated Cost: $X - $Y
         
