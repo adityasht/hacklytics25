@@ -2,7 +2,16 @@ import { useState, useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLocation, useNavigate } from "react-router-dom";
 import { newtonsCradle } from "ldrs";
-import { FaBed, FaBath, FaHome, FaRulerCombined, FaDollarSign, FaTools, FaHammer, FaClipboard } from "react-icons/fa";
+import {
+    FaBed,
+    FaBath,
+    FaHome,
+    FaRulerCombined,
+    FaDollarSign,
+    FaTools,
+    FaHammer,
+    FaClipboard,
+} from "react-icons/fa";
 
 export function Result() {
     newtonsCradle.register();
@@ -24,9 +33,6 @@ export function Result() {
             formData.append("damageContext", data.damage);
             data.images.forEach((image: File, index: number) => {
                 formData.append(`image${index}`, image);
-            });
-            data.retrofit.forEach((file: File, index: number) => {
-                formData.append(`retrofit${index}`, file);
             });
             try {
                 console.log("fetching");
@@ -53,24 +59,36 @@ export function Result() {
                     <div className="flex flex-col justify-center space-y-4">
                         <div className="flex flex-row items-center space-x-4">
                             <FaBed className="text-xl" />
-                            <p className="text-lg font-medium">Bedrooms: {show?.bedrooms}</p>
+                            <p className="text-lg font-medium">
+                                Bedrooms: {show?.bedrooms}
+                            </p>
                             <FaBath className="text-xl" />
-                            <p className="text-lg font-medium">Bathrooms: {show?.bathrooms}</p>
+                            <p className="text-lg font-medium">
+                                Bathrooms: {show?.bathrooms}
+                            </p>
                         </div>
                         <div className="flex flex-row items-center space-x-4">
                             <FaHome className="text-xl" />
-                            <p className="text-lg font-medium">Property Type: {show?.property_type}</p>
+                            <p className="text-lg font-medium">
+                                Property Type: {show?.property_type}
+                            </p>
                             <FaRulerCombined className="text-xl" />
-                            <p className="text-lg font-medium">Area: {show?.square_feet} sqft</p>
+                            <p className="text-lg font-medium">
+                                Area: {show?.square_feet} sqft
+                            </p>
                         </div>
                     </div>
                     <div className="mt-6">
                         <h2 className="text-xl font-semibold">Cost Range</h2>
                         <div className="flex flex-row items-center space-x-4">
                             <FaDollarSign className="text-xl" />
-                            <p className="text-lg">Max: ${show?.assessment[0].total_cost_range.max}</p>
+                            <p className="text-lg">
+                                Min: ${show?.assessment[0].total_cost_range.min}
+                            </p>
                             <FaDollarSign className="text-xl" />
-                            <p className="text-lg">Min: ${show?.assessment[0].total_cost_range.min}</p>
+                            <p className="text-lg">
+                                Max: ${show?.assessment[0].total_cost_range.max}
+                            </p>
                         </div>
                     </div>
                     <div className="mt-6">
@@ -79,28 +97,56 @@ export function Result() {
                             <h3 className="text-lg font-medium flex items-center">
                                 <FaTools className="mr-2" /> Additional Costs
                             </h3>
-                            <p className="text-lg">Max: ${show?.assessment[0].breakdown["Additional Costs"].max}</p>
-                            <p className="text-lg">Min: ${show?.assessment[0].breakdown["Additional Costs"].min}</p>
+                            <p className="text-lg">
+                                Min: $
+                                {
+                                    show?.assessment[0].breakdown[
+                                        "Additional Costs"
+                                    ].min
+                                }
+                            </p>
+                            <p className="text-lg">
+                                Max: $
+                                {
+                                    show?.assessment[0].breakdown[
+                                        "Additional Costs"
+                                    ].max
+                                }
+                            </p>
                         </div>
                         <div className="mt-2">
                             <h3 className="text-lg font-medium flex items-center">
                                 <FaHammer className="mr-2" /> Labor
                             </h3>
-                            <p className="text-lg">Max: ${show?.assessment[0].breakdown["Labor"].max}</p>
-                            <p className="text-lg">Min: ${show?.assessment[0].breakdown["Labor"].min}</p>
+                            <p className="text-lg">
+                                Min: $
+                                {show?.assessment[0].breakdown["Labor"].min}
+                            </p>
+                            <p className="text-lg">
+                                Max: $
+                                {show?.assessment[0].breakdown["Labor"].max}
+                            </p>
                         </div>
                         <div className="mt-2">
                             <h3 className="text-lg font-medium flex items-center">
                                 <FaClipboard className="mr-2" /> Materials
                             </h3>
-                            <p className="text-lg">Max: ${show?.assessment[0].breakdown["Materials"].max}</p>
-                            <p className="text-lg">Min: ${show?.assessment[0].breakdown["Materials"].min}</p>
+                            <p className="text-lg">
+                                Min: $
+                                {show?.assessment[0].breakdown["Materials"].min}
+                            </p>
+                            <p className="text-lg">
+                                Max: $
+                                {show?.assessment[0].breakdown["Materials"].max}
+                            </p>
                         </div>
                         <div className="mt-2">
                             <h3 className="text-lg font-medium flex items-center">
                                 <FaClipboard className="mr-2" /> Notes
                             </h3>
-                            <p className="text-lg">{show?.assessment[0].breakdown.notes}</p>
+                            <p className="text-lg">
+                                {show?.assessment[0].breakdown.notes}
+                            </p>
                         </div>
                     </div>
                 </>
@@ -114,8 +160,13 @@ export function Result() {
                     </div>
                     <div className="flex justify-center mt-4">
                         <div className="flex w-1 flex-col items-center">
-                            <l-newtons-cradle size="78" speed="1.2" color="#0c0a09"></l-newtons-cradle>
-                            <p className="mt-2 p-2 font-mono animate-pulse rounded-md">Loading...</p>
+                            <l-newtons-cradle
+                                size="78"
+                                speed="1.2"
+                                color="#0c0a09"></l-newtons-cradle>
+                            <p className="mt-2 p-2 font-mono animate-pulse rounded-md">
+                                Loading...
+                            </p>
                         </div>
                     </div>
                 </>

@@ -48,7 +48,9 @@ async def vision_api_call(prompt: str, image_input: str) -> dict:
                             }
                         ]
                     }
-                ]
+                ],
+                "temperature": 0,
+                "top_k": 1
             }
         )
         
