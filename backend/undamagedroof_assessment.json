@@ -1,0 +1,32 @@
+{
+  "status": "complete",
+  "vision_responses": [
+    {
+      "prompt": "\nYou are doing a property assesment to decide if there is SIGNIFICANT damage to property visible in the picture.      \n\nIf you observe NO SIGNIFICANT DAMAGE:\n- Explicitly state that no significant damage is visible\n- Note any preventive maintenance recommendations\n- Identify any early warning signs to monitor\n\n1. PRIMARY DAMAGE ASSESSMENT\n- What specific type of damage is visible?\n- What is the apparent cause of the damage (age, weather, wear, etc.)?\n- Precisely describe the visual characteristics of the damage\n- Classify the severity: none, minimal, moderate, or severe\n- Estimate the approximate age of the damage\n- Note any immediate safety concerns\n\n2. EXTENT AND DISTRIBUTION\n- What percentage of the visible area shows damage?\n- Is the damage localized or widespread?\n- Identify all affected components and materials\n- Note any patterns in the damage distribution\n- Document any signs of progressive deterioration\n- Estimate the total affected area in square feet or percentage\n\n3. MATERIAL AND CONSTRUCTION DETAILS\n- Identify all visible construction materials\n- Note the quality and grade of materials\n- Document any visible previous repairs\n- Identify any non-standard or specialty materials\n- Note the condition of surrounding/adjacent materials\n- Identify any architectural features affecting repair\n\n4. REPAIR COMPLEXITY FACTORS\n- Assess accessibility for repairs\n- Identify potential complications or challenges\n- Note any special equipment requirements\n- Consider seasonal or weather impact on repairs\n- Identify any code compliance considerations\n- Document any factors that could affect repair costs\n\n5. UNDERLYING DAMAGE ASSESSMENT\n- Are there signs of hidden or structural damage?\n- Is there evidence of water infiltration?\n- Note any visible mold or moisture damage\n- Identify any potential systemic issues\n- Document signs of long-term deterioration\n- Note any risk factors for future damage\n\n6. ADDITIONAL OBSERVATIONS\n- Document any unusual features or conditions\n- Note environmental factors affecting the damage\n- Identify any maintenance issues contributing to damage\n- Record any relevant historical repair evidence\n- Note any immediate temporary remediation needs\n\nSUMMARY REQUIREMENTS:\n- Provide clear severity classification\n- Estimate scope of needed repairs\n- List key factors affecting repair costs\n- Prioritize repair urgency\n- Note any special considerations\nProperty Info: None",
+      "response": "Here's a property assessment based on the image provided:\n\n**SUMMARY:**\n\n*   **Severity Classification:** No significant damage is visible.\n*   **Scope of Repairs:** None required at this time.\n*   **Key Factors Affecting Repair Costs:** N/A\n*   **Prioritize Repair Urgency:** N/A\n*   **Special Considerations:** Regular maintenance is recommended.\n\n**DETAILED ASSESSMENT:**\n\n**1. PRIMARY DAMAGE ASSESSMENT**\n\n*   **Type of Damage:** None visible. The roof appears to be in good condition.\n*   **Apparent Cause:** N/A\n*   **Visual Characteristics:** The roof tiles appear to be well-maintained, with no obvious signs of cracking, missing tiles, or discoloration indicative of significant wear or damage.\n*   **Severity:** None.\n*   **Age of Damage:** N/A\n*   **Immediate Safety Concerns:** None.\n\n**2. EXTENT AND DISTRIBUTION**\n\n*   **Percentage of Visible Area Showing Damage:** 0%\n*   **Damage Distribution:** N/A\n*   **Affected Components:** Roof tiles.\n*   **Patterns:** N/A\n*   **Progressive Deterioration:** None visible.\n*   **Affected Area:** N/A\n\n**3. MATERIAL AND CONSTRUCTION DETAILS**\n\n*   **Visible Materials:** Appears to be a composite or tile roof.\n*   **Quality and Grade:** Appears to be a high-quality roof.\n*   **Previous Repairs:** None visible.\n*   **Non-Standard Materials:** N/A\n*   **Condition of Surrounding Materials:** The surrounding materials appear to be in good condition.\n*   **Architectural Features:** The roof has a complex design with multiple planes and angles.\n\n**4. REPAIR COMPLEXITY FACTORS**\n\n*   **Accessibility:** The roof's complexity may make future repairs more challenging.\n*   **Potential Complications:** N/A\n*   **Special Equipment:** N/A\n*   **Seasonal/Weather Impact:** N/A\n*   **Code Compliance:** N/A\n*   **Factors Affecting Repair Costs:** N/A\n\n**5. UNDERLYING DAMAGE ASSESSMENT**\n\n*   **Signs of Hidden/Structural Damage:** None visible.\n*   **Evidence of Water Infiltration:** None visible.\n*   **Visible Mold/Moisture Damage:** None visible.\n*   **Systemic Issues:** N/A\n*   **Long-Term Deterioration:** None visible.\n*   **Risk Factors:** N/A\n\n**6. ADDITIONAL OBSERVATIONS**\n\n*   **Unusual Features:** The roof's design is complex.\n*   **Environmental Factors:** The roof appears to be in a dry climate.\n*   **Maintenance Issues:** None visible.\n*   **Historical Repair Evidence:** None visible.\n*   **Temporary Remediation Needs:** N/A\n\n**PREVENTIVE MAINTENANCE RECOMMENDATIONS:**\n\n*   **Regular Inspections:** Recommend periodic inspections (e.g., annually or after severe weather events) to identify any early signs of wear or damage.\n*   **Debris Removal:** Keep the roof clear of leaves, branches, and other debris that could potentially trap moisture or damage the tiles.\n*   **Gutter Cleaning:** Ensure gutters and downspouts are clean and functioning properly to prevent water buildup.\n*   **Monitor for Early Warning Signs:** Watch for any changes in the roof's appearance, such as missing tiles, cracks, or discoloration.\n Property Info None"
+    }
+  ],
+  "final_assessment": {
+    "total_cost_range": {
+      "min": 0.0,
+      "max": 0.0
+    },
+    "breakdown": {
+      "Labor": {
+        "min": 0.0,
+        "max": 0.0
+      },
+      "Materials": {
+        "min": 0.0,
+        "max": 0.0
+      },
+      "Additional Costs": {
+        "min": 0.0,
+        "max": 0.0
+      }
+    },
+    "notes": null
+  },
+  "error": null,
+  "property_info": null
+}

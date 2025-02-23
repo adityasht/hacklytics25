@@ -153,6 +153,7 @@ class AutomaticDamageAssessment(LLMSession):
         Based on this information, you should either:
         1. Respond with 'Prompt:' followed by a specific question to get more details from the vision model
         2. Respond with 'End:' followed by a complete cost assessment in this exact format and keep the ranges as small as possible:
+        3. If you do not see any significant damage beyond wear and tear, or do not see damagea at all. Respond with 'End:' followed by reasoning as to why you belive no repairs are needed.
 
         'Total Estimated Cost: $X - $Y
         
@@ -168,6 +169,7 @@ class AutomaticDamageAssessment(LLMSession):
         - Consider property value impact on material quality
         - Include permit costs and overhead in additional costs
         - Aim for narrower price ranges (max 25% difference between min and max)
+
         """
 
     async def _run_assessment_loop(self, initial_analysis: str, assessment_data: Dict):

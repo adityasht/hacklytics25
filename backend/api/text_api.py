@@ -38,7 +38,9 @@ async def text_api_call(prompt: str) -> dict:
                         "role": "user",
                         "content": prompt
                     }
-                ]
+                ],
+                "temperature": 0,
+                "top_k": 1
             }
         )
         
