@@ -44,6 +44,7 @@ async def text_api_call(prompt: str) -> dict:
         )
         
         response.raise_for_status()
+        print(response.json())
         return response.json()
     
     except requests.exceptions.RequestException as e:
