@@ -9,6 +9,7 @@ from os.path import isfile, join
 import shutil
 import json
 from main import retrievePropertyData, main
+from main import returnGlobalDf
 app = Flask(__name__)
 CORS(app)
 
@@ -51,7 +52,17 @@ def driver():
             print(data.get("final_assessment"))
             responseObj.append(data.get("final_assessment"))
         os.remove(os.path.join(os.getcwd(), path))
-    return jsonify(responseObj)
+    df = returnGlobalDf()
+    print(df['bedrooms'])
+    first = df.iloc[0]
+    resp = {
+        "bedrooms": int(first['bedrooms']),
+        "bathrooms": int(first['bathrooms']),
+        "square_feet": int(first['squareFootage']),
+        "property_type": first['propertyType'],
+        "assessment": responseObj
+    }
+    return resp
 
         
 if __name__ == "__main__":

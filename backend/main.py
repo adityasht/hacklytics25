@@ -16,6 +16,7 @@ load_dotenv()
 RENTCAST_API_KEY = os.getenv("RENTCAST_API_KEY")
 RENTCAST_URL = 'https://api.rentcast.io/v1/properties'
 
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -135,12 +136,20 @@ def retrievePropertyData(address):
 
     if response.status_code == 200:
         df = pd.DataFrame(response.json()).drop(columns= ['id','addressLine1','addressLine2','assessorID','legalDescription','owner'])
+        setGlobalDf(df)
         buffer = io.StringIO()
         df.to_string(buffer)
         return buffer.getvalue()
 
     else:
         return {"error": f"Failed to fetch data. Status Code: {response.status_code}"}
+    
+def setGlobalDf(df):
+    global global_df
+    global_df = df
+    
+def returnGlobalDf():
+    return global_df
 
 def main(images_of_damages, propertyinfo):
     async def run_assessment():
