@@ -73,7 +73,11 @@ class AutomaticDamageAssessment(LLMSession):
         """Parse the breakdown section of the cost estimate."""
         breakdown = {}
         if "Breakdown:" in estimate_text:
-            breakdown_text = estimate_text.split("Breakdown:")[1].strip()
+            # Split into breakdown and notes sections first
+            main_sections = estimate_text.split("Notes:", 1)
+            
+            # Parse the breakdown section
+            breakdown_text = main_sections[0].split("Breakdown:")[1].strip()
             sections = breakdown_text.split('\n\n')[0].split('\n')
             
             for section in sections:
@@ -86,12 +90,16 @@ class AutomaticDamageAssessment(LLMSession):
                             'min': min_val,
                             'max': max_val
                         }
+            
+            # Add notes if they exist
+            if len(main_sections) > 1:
+                breakdown['notes'] = main_sections[1].strip()
+
         return breakdown
 
     def _extract_notes(self, estimate_text: str) -> Optional[str]:
         """Extract notes from the cost estimate text."""
-        return (estimate_text.split('Note:', 1)[1].strip() 
-                if 'Note:' in estimate_text else None)
+        return
 
     async def run_assessment(self, image_path: str, initial_vision_prompt: str) -> Dict:
         """Run the complete automated assessment process."""
@@ -158,7 +166,8 @@ class AutomaticDamageAssessment(LLMSession):
         Breakdown:
         Labor: $A - $B
         Materials: $C - $D
-        Additional Costs: $E - $F'
+        Additional Costs: $E - $F
+        Notes: [Fill out with the reasoning behind the estimated cost and breakdown]'
         
         More Guidelines for Cost Assessment:
         - Make sure to reach a resolution and a completed cost assessment using less than eight prompts, using any avaliable information. Try not to repetitively ask the same prompts.
