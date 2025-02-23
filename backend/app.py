@@ -12,7 +12,7 @@ load_dotenv()
 RENTCAST_API_KEY = os.getenv("RENTCAST_API_KEY")
 RENTCAST_URL = 'https://api.rentcast.io/v1/properties'
 Llama_Vision_API_KEY = os.getenv("Llama3.2_Vision_API_KEY")
-
+UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
 
 def retrievePropertyData(address):
     querystring = {"address" : address}
@@ -31,21 +31,17 @@ def retrievePropertyData(address):
         return {"error": f"Failed to fetch data. Status Code: {response.status_code}"}
 
 @app.route("/", methods=["POST"])
-def process_input_data():
+def driver():
 
     address = request.form.get("address")
-    images_of_damages = request.files.getlist("damageImages")
     damages_context = request.form.get("damagesContext")
-    images_of_retrofits = request.files.getlist("retrofitImages")
     retrofits_context = request.form.get("retrofitsContext")
+    images = request.files
+    for file in images:
+        extension = images[file].filename.split('.')[1]
+        images[file].save(os.path.join(UPLOAD_FOLDER, file+"."+extension))
     
-    if not address:
-        return jsonify({"Error": "Address is required. Cannot be empty."}), 400
     
-    if len(images_of_damages) == 0:
-        return jsonify({"Error": "No images have been submitted. Please upload atleast one."}), 400
-    
-    retrievePropertyData(address)
     
 
         
